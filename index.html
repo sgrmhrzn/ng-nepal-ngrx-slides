@@ -1,0 +1,776 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>NgNepal</title>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
+
+    <style>
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4,
+        .reveal h5 {
+            text-transform: none;
+        }
+
+        .reveal section img {
+            border: none;
+            box-shadow: none;
+            background: none;
+        }
+
+        .reveal pre {
+            box-shadow: none;
+        }
+    </style>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <img src="./assets/badge.svg" width="100">
+                <h1>State Management with NgRx</h1>
+                <p>
+                    Sagar Maharjan <br>
+                    <small>Software Engineer |</small>
+                    <small>Blue Panda Communication</small>
+                </p>
+            </section>
+            <section>
+                <h1></h1>
+                <h2>NGRX</h2>
+                <ul>
+                    <li>Framework for building reactive Application</li>
+                    <li>State Management with single state</li>
+                    <li>Expresses state change with actions</li>
+                    <li>State management, isolation and more</li>
+                </ul>
+            </section>
+
+            <section>
+                <h1></h1>
+                <h2>Packages</h2>
+                <ul>
+                    <li>@ngrx/store</li>
+                    <li>@ngrx/effects</li>
+                    <li>@ngrx/store-devtools</li>
+                </ul>
+                <!-- <ul>
+                    <li>Store</li>
+                    <li>Actions</li>
+                    <li>Reducer</li>
+                    <li>Selector</li>
+                </ul> -->
+            </section>
+
+            <section>
+                <section>
+                    <h1>@ngrx/store</h1>
+                </section>
+                <section>
+                    <h2>Key Components</h2>
+                    <ul>
+                        <ul>
+                            <li>Store</li>
+                            <li>Actions</li>
+                            <li>Reducers</li>
+                            <li>Selectors</li>
+                        </ul>
+                        <!-- <li>Holds the app's state</li>
+                        <li>Modified by dispatching actions</li>
+                        <li>Include StoreModule.forRoot() in app module and StoreModule.ForFeature() in feature module
+                        </li> -->
+                    </ul>
+                </section>
+                <section>
+                    <h2>Store</h2>
+                    <ul>
+                        <li>Holds the app's state</li>
+                        <li>Modified by dispatching actions</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Actions</h2>
+                    <ul>
+                        <li>Unique events</li>
+                        <li>External interaction with network request</li>
+                        <li>User interaction in UI</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Reducers</h2>
+                    <ul>
+                        <li>Responsible to handle transition of states</li>
+                        <li>Determines which action to execute</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Selectors</h2>
+                    <ul>
+                        <li>Function used for obtaining a slice of store state</li>
+                        <li>Memoization technique benefits in performance</li>
+                    </ul>
+                </section>
+                <section>
+                    <!-- <h2>Selectors</h2> -->
+                    <img src="./assets/store_ngrx.png">
+                </section>
+                <section>
+                    <h2>Registering Store</h2>
+                    <pre>
+                        <code class="hljs" data-trim data-line-numbers="10-11">
+                            @NgModule({
+                                declarations: [
+                                    AppComponent
+                                ],
+                                imports: [
+                                    HttpClientModule,
+                                    HttpClientInMemoryWebApiModule.forRoot(IBooksMemory),
+                                    BrowserModule,
+                                    AppRoutingModule,
+                                    StoreModule.forRoot({ cart: fromCart.reducer, 
+                                        stock: fromStock.reducer }),
+                                    EffectsModule.forRoot([StockEffects])
+                                ],
+                                providers: [SharedService],
+                                bootstrap: [AppComponent]
+                            })
+                        </code>
+                    </pre>
+                    </p>
+                </section>
+                <section>
+                    <h2>Registering Store</h2>
+                    <pre>
+                        <code class="hljs" data-trim data-line-numbers="7">
+                            @NgModule({
+                                declarations: [ListComponent, SearchComponent, FilterComponent, WrapperComponent],
+                                imports: [
+                                CommonModule,
+                                BooksRoutingModule,
+                                FormsModule,
+                                StoreModule.forFeature('filters', filterState.reducer)
+                                ]
+                                })
+                        </code>
+                    </pre>
+                    </p>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h1>@ngrx/effects</h1>
+                </section>
+                <section>
+                    <h2>Key Concepts</h2>
+                    <ul>
+                        <ul>
+                            <li>Side effects modal for store</li>
+                            <li>Isolates components from resources</li>
+                            <li>Handle fetching datas, long running task & other external interactions</li>
+                        </ul>
+                        <!-- <li>Holds the app's state</li>
+                            <li>Modified by dispatching actions</li>
+                            <li>Include StoreModule.forRoot() in app module and StoreModule.ForFeature() in feature module
+                            </li> -->
+                    </ul>
+                </section>
+                <section>
+                    <!-- <h2>Selectors</h2> -->
+                    <img src="./assets/store_effects_ngrx.png">
+                </section>
+                <!-- <section>
+                    <h2>Code</h2>
+                    <pre>
+                        <code class="hljs" data-trim data-line-numbers="">
+@Effect()
+loadBooks$: Observable<Action> = this.actions$.pipe(
+    ofType(StockActionTypes.Load),
+    mergeMap(action =>
+        this.sharedService.getBooks().pipe(
+            map((bookData) => {
+                const payload = {
+                    books: bookData,
+                };
+                return new stockActions.LoadSuccess(payload);
+            }),
+            catchError(err => of(new stockActions.LoadFail(err)))
+        )));
+                        </code>
+                    </pre>
+                </section> -->
+                <section>
+                    <h2>Registering Effects</h2>
+                    <pre>
+                            <code class="hljs" data-trim data-line-numbers="12">
+@NgModule({
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        HttpClientModule,
+        HttpClientInMemoryWebApiModule.forRoot(IBooksMemory),
+        BrowserModule,
+        AppRoutingModule,
+        StoreModule.forRoot({ cart: fromCart.reducer,
+            stock: fromStock.reducer }),
+        EffectsModule.forRoot([StockEffects])
+    ],
+    providers: [SharedService],
+    bootstrap: [AppComponent]
+})
+</code></pre>
+                </section>
+                <section>
+                    <h2>Registering Effects</h2>
+                    <pre>
+                        <code class="hljs" data-trim data-line-numbers="7">
+                            @NgModule({
+                                declarations: [ListComponent, SearchComponent, FilterComponent, WrapperComponent],
+                                imports: [
+                                CommonModule,
+                                BooksRoutingModule,
+                                FormsModule,
+                                EffectsModule.forFeature([StockEffects])
+                                ]
+                                })
+                        </code>
+                    </pre>
+                    </p>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h2>About a Demo</h2>
+                </section>
+                <!-- <section>
+                    <h2>Goals</h2>
+                    <ul>
+                        <li>Minimize api request</li>
+                        <li>Improve Performance</li>
+                        <li>Manage state by storing single state</li>
+                        <li>Simplify state changes in multiple components</li>
+                        <li>Persist state on re-rendering routes</li>
+                    </ul>
+                </section> -->
+                <section>
+                    <h2>States</h2>
+                    <ul>
+                        <li>Stock State</li>
+                        <li>Filter State</li>
+                        <li>Cart State</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Stock State</h2>
+                    <pre>
+                                <code class="hljs" data-trim data-line-numbers="">
+export interface StockState {
+    books: BookModel[];
+    currentStockId: number;
+    language: KeyValueModel[];
+    genre: KeyValueModel[];
+    error: any;
+}
+                            </code>
+                        </pre>
+                </section>
+                <section>
+                    <h2>Stock State</h2>
+                    <img src="./assets/stock page [2].png" />
+                </section>
+                <section>
+                    <h2>Stock State</h2>
+                    <img src="./assets/form [2].png" />
+                </section>
+                <section>
+                    <h2>Flow Load/LoadSuccess</h2>
+                    <img src="./assets/stock_state.png">
+                </section>
+                <section>
+                    <h2>Flow Add/Update</h2>
+                    <img src="./assets/stock_state2.png">
+                </section>
+                <section>
+                    <h2>Stock Actions</h2>
+                    <pre>
+                        <code class="hljs" data-trim data-line-numbers="3">
+export class AppComponent {
+    constructor(private store: Store&lt;StockState&gt;) {
+        this.store.dispatch(new stockActions.Load());
+    }
+}
+                        </code>
+                    </pre>
+                    <pre>
+                        <code class="hljs" data-trim data-line-numbers="3-5">
+onSubmit() {
+    if (this.activateRoute.snapshot.params.id) {
+        this.store.dispatch(new Update(this.book));
+    } else {
+        this.store.dispatch(new AddBook(this.book));
+    }
+    this.router.navigateByUrl('/stock');
+}
+                        </code>
+                    </pre>
+
+                </section>
+                <section>
+                    <h2>Stock Effects</h2>
+                    <pre>
+                            <code class="hljs" data-trim data-line-numbers="">
+@Effect()
+loadBooks$: Observable&lt;Action&gt; = this.actions$.pipe(
+    ofType(StockActionTypes.Load),
+    mergeMap(action =>
+        zip(this.sharedService.getStock(),
+            this.sharedService.getGenres(),
+            this.sharedService.getLanguages()).pipe(
+                map(([stock, genreData, languageData]) => {
+                    const payload = {
+                        books: stock,
+                        genre: genreData,
+                        language: languageData
+                    };
+                return new stockActions.LoadSuccess(payload);
+                }),
+                catchError(err => 
+                            of(new stockActions.LoadFail(err)))
+            )
+    )
+);
+                            </code>
+                        </pre>
+                </section>
+
+                <section>
+                    <h2>Stock Reducer</h2>
+
+                    <pre>
+                        <code class="hljs" data-trim data-line-numbers="">
+export function reducer(state: StockState = initialState,
+ action: StockAction): any {
+
+switch (action.type) {
+    case StockActionTypes.LoadSuccess:
+        return {
+            ...state,
+            books: action.payload.books,
+            genre: action.payload.genre,
+            language: action.payload.language
+        };
+    case StockActionTypes.SelectedStockId:
+        return {
+            ...state,
+            currentStockId: action.payload
+        };
+    case StockActionTypes.AddBookInStockSuccess:
+        return {
+            ...state,
+            books: [...state.books, action.payload],
+            error: ''
+        };
+    case StockActionTypes.UpdateBookInStockSuccess:
+        const updatedBooks = state.books.map(
+            item => action.payload.id === 
+                            item.id ? action.payload : item);
+        return {
+            ...state,
+            books: updatedBooks,
+            currentStockId: action.payload.id,
+            error: ''
+        };
+    case StockActionTypes.Delete:
+        return {
+            ...state,
+            books: action.payload
+        };
+    default:
+        return state;
+    }
+}
+                        </code>
+                    </pre>
+
+                </section>
+
+                <section id="fragments">
+                    <h2>Selectors</h2>
+                    <pre class="fragment">
+                            <code class="hljs" data-trim data-line-numbers="">
+const getBookFeatureState = 
+                    createFeatureSelector&lt;StockState&gt;('stock');
+    </code>
+</pre>
+                    <pre class="fragment">
+                        <code class="hljs" data-trim data-line-numbers="">
+export const getBooks = createSelector(
+    getBookFeatureState,
+    state => state.books
+);                                
+                        </code>
+                    </pre>
+
+                    <pre class="fragment">
+                            <code class="hljs" data-trim data-line-numbers="">
+this.subscription = this.store.pipe(select(fromStock.getBooks))
+.subscribe((resp: BookModel[]) => {
+    this.books = resp;
+});
+                    </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Stock State Demo</h2>
+                </section>
+                <section>
+                    <h2>Filter State</h2>
+                    <pre class="fragments">
+                            <code class="hljs fragment" data-trim data-line-numbers="">
+export interface FilterState {
+    FilterLanguage: FilterModel;
+    FilterGenre: FilterModel;
+}
+                            </code>
+                    <code class="fragment" data-trim data-line-numbers="">
+export interface FilterModel {
+    IsActive: boolean;
+    Value: string;
+}
+                </code>
+            </pre>
+                </section>
+                <section>
+                    <h2>Filter State</h2>
+                    <img src="./assets/book_page_highlight.png" />
+                </section>
+                <section>
+                    <h2>Flow</h2>
+                    <img src="./assets/filter_state.png">
+                </section>
+                <section>
+                    <h2>Filter Actions</h2>
+
+                    <pre class="fragments">
+                            <code class="fragment" data-trim data-line-numbers="4-6,9-11">
+filterOptionChange(type: number) {
+switch (type) {
+    case 0:
+        this.store.dispatch(
+        new actions.ToggleLanguageFilter(this.languageFilter)
+            );
+        break;
+    case 1:
+        this.store.dispatch(
+        new actions.ToggleGenreFilter(this.genreFilter)
+            );
+        break;
+}
+}
+                                                    </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Filter Reducer</h2>
+                    <pre class="fragments">
+                                <code class="fragment" data-trim data-line-numbers="">
+export function reducer(state: FilterState = InitialState, 
+action: fromFilterActions.FilterActions): FilterState {
+    switch (action.type) {
+        case FilterTypes.ToggleLanguage:
+            return {
+                ...state,
+                FilterLanguage: action.payload
+            };
+        case FilterTypes.ToggleGenre:
+            return {
+                ...state,
+                FilterGenre: action.payload
+            };
+        default:
+            return state;
+
+    }
+}
+                                                        </code>
+                        </pre>
+                </section>
+                <section>
+                    <h2>Selectors</h2>
+                    <pre id="fragments">
+                                <code class="hljs fragment" data-trim data-line-numbers="">
+const getFilterFeatureState = 
+                createFeatureSelector&lt;FilterState&gt;('filters');
+        </code>
+                            <code class="hljs fragment" data-trim data-line-numbers="">
+export const getFilters = createSelector(
+    getFilterFeatureState,
+    state => state);                      
+                            </code>
+                                <code class="hljs fragment" data-trim data-line-numbers="">
+this.subscription = this.store.pipe(select(fromFilter.getFilters))
+.subscribe(filters => {
+        this.languageFilter = filters.FilterLanguage;
+        this.genreFilter = filters.FilterGenre;
+    }
+);
+                        </code>
+                        </pre>
+                </section>
+
+                <section>
+                    <h2>Filter State Demo</h2>
+                </section>
+                <section>
+                    <h2>Cart State</h2>
+                    <pre class="fragments">
+                                <code class="hljs fragment" data-trim data-line-numbers="">
+export interface CartState {
+    items: CartModel[];
+}
+                                </code>
+                        <code class="fragment" data-trim data-line-numbers="">
+export interface CartModel {
+    Name: string;
+    id: number;
+    Price: number;
+    Total?: number;
+    Quantity?: number;
+};
+                    </code>
+                </pre>
+                </section>
+
+                <section>
+                    <h2>Cart State</h2>
+                    <img src="./assets/books_cart [2].PNG" />
+                </section>
+                <section>
+                    <h2>Cart State</h2>
+                    <img src="./assets/cart_state.png">
+                </section>
+                <section>
+                    <h2>Cart Actions</h2>
+
+                    <pre class="fragments">
+                                <code class="fragment" data-trim data-line-numbers="7">
+addToCart(book: BookModel) {
+    const cartItem: CartModel = { 
+        id: book.id, 
+        Name: book.Name, 
+        Price: book.Price 
+    };
+    this.store.dispatch(new cartActions.AddToCart(cartItem));
+}
+            </code>
+            <code class="fragment" data-trim data-line-numbers="2">
+remove(id: number) {
+    this.store.dispatch(new RemoveFromCart(id));
+}
+            </code>
+            </pre>
+                </section>
+                <section>
+                    <h2>Cart Reducer</h2>
+                    <pre class="fragments">
+                                    <code class="fragment" data-trim data-line-numbers="">
+export function reducer(state: CartState = InitialState, 
+action: CartAction): CartState {
+
+let existingItem = 
+            state.items.find(x => x.id === action.payload.id);
+
+    switch (action.type) {
+        case CartActionType.AddToCart:
+
+        if (existingItem) {
+            existingItem.Quantity += 1;
+            existingItem.Total = existingItem.Price 
+            * existingItem.Quantity;
+        } else {
+            action.payload.Quantity = 1;
+            action.payload.Total = action.payload.Price 
+                                    * action.payload.Quantity;
+            state.items.push(action.payload);
+        }
+
+        return {
+            ...state,
+            items: state.items
+        };
+        
+        case CartActionType.RemoveFromCart:
+
+        const index = state.items.indexOf(existingItem);
+        state.items.splice(index, 1);
+        
+        return {
+            ...state,
+            items: state.items
+        };
+
+        default:
+            return state;
+
+    }
+}                                                 
+ </code>
+</pre>
+                </section>
+                <section>
+                    <h2>Selectors</h2>
+                    <pre id="fragments">
+                                    <code class="hljs fragment" data-trim data-line-numbers="">
+const getCartFeatureState = 
+                    createFeatureSelector&lt;CartState&gt;('cart');
+            </code>
+                                <code class="hljs fragment" data-trim data-line-numbers="">
+export const getCartItems = createSelector(
+    getCartFeatureState,
+    state => state.items
+);                                                          
+                                </code>
+
+                    <code class="hljs fragment" data-trim data-line-numbers="">
+this.store.pipe(select(fromCart.getCartItems))
+.subscribe(items => {
+    this.cart = items;
+});
+                            </code>
+                    </pre>
+                </section>
+                <section>
+                    <h2>Selectors</h2>
+                    <pre id="fragments">
+                        <code class="hljs fragment" data-trim data-line-numbers="">
+export const getCartItem = (id) => createSelector(
+    getCartFeatureState,
+    state => state.items.find(x => x.id === id) 
+    || { id: 0, Name: '', Price: 0, Total: 0, Quantity: 0 }
+);
+                        </code>
+                    </pre>
+
+                </section>
+                <section>
+                    <h2>Cart State Demo</h2>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>@ngrx/store-devtools</h2>
+                </section>
+                <section>
+                    <h2>Download Redux Extension</h2>
+                    <img src="./assets/redux_extension.png">
+                </section>
+                <section>
+                    <h2>Import DevtoolModule</h2>
+                    <pre>
+                        <code class="hljs" data-trim data-line-numbers="12-16">
+@NgModule({
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        HttpClientModule,
+        HttpClientInMemoryWebApiModule.forRoot(IBooksMemory),
+        BrowserModule,
+        AppRoutingModule,
+        StoreModule.forRoot({ cart: fromCart.reducer, 
+            stock: fromStock.reducer }),
+        StoreDevtoolsModule.instrument({
+            name: 'State Management with Ngrx',
+            maxAge: 25,
+            logOnly: environment.production
+        }),
+        EffectsModule.forRoot([StockEffects])
+    ],
+    providers: [SharedService],
+    bootstrap: [AppComponent]
+})
+                        </code>
+
+                    </pre>
+                </section>
+            </section>
+
+            <section>
+                <h2>Benefits of NgRx</h2>
+                <ul>
+                    <li>Performance</li>
+                    <li>Serializability</li>
+                    <li>Encapsulation</li>
+                    <li>Testable</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>When to use NgRx?</h2>
+                <ul>
+                    <li>Lots of user interactions</li>
+                    <li>Side effects with external resources</li>
+                    <li>Accessed by many components and services</li>
+                    <li>Available when re-entering routes</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Cons</h2>
+                <ul>
+                    <li>Steep learning curve</li>
+                    <li>Knowledge of rxjs and redux</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Thank you!<h2>
+                        <p>https://github.com/sgrmhrzn/state-management-NgRx</p>
+            </section>
+        </div>
+        <div style="position: absolute;
+        z-index: 9999;
+        color: white;
+        bottom: 0;
+        margin: 10px;display: flex">
+            <img src="./assets/twitter.png" height="50"> <span>@sgrmhrzn</span>
+        </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            dependencies: [
+                { src: 'plugin/markdown/marked.js' },
+                { src: 'plugin/markdown/markdown.js' },
+                { src: 'plugin/notes/notes.js', async: true },
+                { src: 'plugin/highlight/highlight.js', async: false }
+            ]
+        });
+    </script>
+</body>
+
+</html>
